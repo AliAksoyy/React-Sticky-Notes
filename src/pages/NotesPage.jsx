@@ -5,7 +5,7 @@ const NotesPage = () => {
   return (
     <div>
       {notes?.map((note) => {
-        return <NoteCard key={note.id} note={note} />;
+        return <NoteCard key={note.$id} note={note} />;
       })}
     </div>
   );
