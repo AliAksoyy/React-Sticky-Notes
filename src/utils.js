@@ -24,3 +24,14 @@ export const setZIndex = (selectedCard) => {
     }
   });
 };
+
+export function bodyParser(value) {
+  console.log("utils", value);
+  try {
+    JSON.parse(value);
+    return JSON.parse(value);
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
+    return value;
+  }
+}

@@ -1,15 +1,15 @@
 import Trash from "../icons/Trash";
 import { useEffect, useRef, useState } from "react";
-import { setNewOffset, setZIndex, autoGrow } from "../utils";
+import { setNewOffset, setZIndex, autoGrow, bodyParser } from "../utils";
 
 // eslint-disable-next-line react/prop-types
 const NoteCard = ({ note }) => {
   // eslint-disable-next-line react/prop-types
-  const body = JSON.parse(note.body);
+  const body = bodyParser(note.body);
   // eslint-disable-next-line react/prop-types
-  const [position, setPosition] = useState(JSON.parse(note.position));
+  const [position, setPosition] = useState(bodyParser(note.position));
   // eslint-disable-next-line react/prop-types
-  const colors = JSON.parse(note.colors);
+  const colors = bodyParser(note.colors);
 
   const textAreaRef = useRef(null);
   const cardRef = useRef(null);
