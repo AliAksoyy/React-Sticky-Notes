@@ -1,8 +1,11 @@
 import Trash from "../icons/Trash";
 import { db } from "../appwrite/databases";
+import { useContext } from "react";
+import { NotesContext } from "../context/NotesContext";
 
 // eslint-disable-next-line react/prop-types
-const DeleteButton = ({ noteId, setNotes }) => {
+const DeleteButton = ({ noteId }) => {
+  const { setNotes } = useContext(NotesContext);
   const handleDelete = async () => {
     db.notes.delete(noteId);
 
