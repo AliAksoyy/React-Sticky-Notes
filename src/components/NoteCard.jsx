@@ -1,19 +1,19 @@
-import Trash from "../icons/Trash";
+/* eslint-disable react/prop-types */
+import DeleteButton from "./DeleteButton";
 import Spinner from "../icons/Spinner";
 import { useEffect, useRef, useState } from "react";
 import { db } from "../appwrite/databases";
 import { setNewOffset, setZIndex, autoGrow, bodyParser } from "../utils";
 
-// eslint-disable-next-line react/prop-types
-const NoteCard = ({ note }) => {
+const NoteCard = ({ note, setNotes }) => {
   const [saving, setSaving] = useState(false);
 
   const keyUpTimer = useRef(null);
-  // eslint-disable-next-line react/prop-types
+
   const body = bodyParser(note.body);
-  // eslint-disable-next-line react/prop-types
+
   const [position, setPosition] = useState(bodyParser(note.position));
-  // eslint-disable-next-line react/prop-types
+
   const colors = bodyParser(note.colors);
 
   const textAreaRef = useRef(null);
@@ -25,12 +25,15 @@ const NoteCard = ({ note }) => {
   }, []);
 
   const mouseDown = (e) => {
-    mouseStartPos.x = e.clientX;
-    mouseStartPos.y = e.clientY;
+    if (e.target.className === "card-header") {
+      mouseStartPos.x = e.clientX;
+      mouseStartPos.y = e.clientY;
 
-    document.addEventListener("mousemove", mouseMove);
-    document.addEventListener("mouseup", mouseUp);
-    setZIndex(cardRef.current);
+      setZIndex(cardRef.current);
+
+      document.addEventListener("mousemove", mouseMove);
+      document.addEventListener("mouseup", mouseUp);
+    }
   };
   const mouseMove = (e) => {
     const mouseMoveDir = {
@@ -52,7 +55,7 @@ const NoteCard = ({ note }) => {
 
     const newPosition = setNewOffset(cardRef.current);
     saveData("position", newPosition);
-    // eslint-disable-next-line react/prop-types
+
     db.notes.update(note.$id, { position: JSON.stringify(newPosition) });
   };
 
@@ -60,7 +63,6 @@ const NoteCard = ({ note }) => {
     const payload = { [key]: JSON.stringify(value) };
 
     try {
-      // eslint-disable-next-line react/prop-types
       await db.notes.update(note.$id, payload);
     } catch (error) {
       console.log(error);
@@ -97,7 +99,7 @@ const NoteCard = ({ note }) => {
           backgroundColor: colors.colorHeader,
         }}
       >
-        <Trash />
+        <DeleteButton setNotes={setNotes} noteId={note.$id} />
         {saving && (
           <div className="card-saving">
             <Spinner color={colors.colorText} />
