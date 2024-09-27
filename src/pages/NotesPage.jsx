@@ -16,7 +16,7 @@ const NotesPage = () => {
         import.meta.env.VITE_DATABASE_ID,
         import.meta.env.VITE_COLLECTION_NOTES_ID
       );
-      console.log("Response documents:", response.documents);
+
       setNotes(response.documents);
     } catch (error) {
       console.log(error);

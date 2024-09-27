@@ -26,7 +26,6 @@ export const setZIndex = (selectedCard) => {
 };
 
 export function bodyParser(value) {
-  console.log("utils", value);
   try {
     JSON.parse(value);
     return JSON.parse(value);
