@@ -16,7 +16,6 @@ const NoteCard = ({ note }) => {
   let mouseStartPos = { x: 0, y: 0 };
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
     autoGrow(textAreaRef);
   }, []);
 
