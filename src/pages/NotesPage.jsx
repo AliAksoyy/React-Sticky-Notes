@@ -1,5 +1,5 @@
 // import { fakeData as notes } from "../assets/fakeData";
-import { databases } from "../appwrite/config";
+import { db } from "../appwrite/databases";
 import NoteCard from "../components/NoteCard";
 import { useEffect, useState } from "react";
 
@@ -12,10 +12,7 @@ const NotesPage = () => {
 
   const init = async () => {
     try {
-      const response = await databases.listDocuments(
-        import.meta.env.VITE_DATABASE_ID,
-        import.meta.env.VITE_COLLECTION_NOTES_ID
-      );
+      const response = await db.notes.list();
 
       setNotes(response.documents);
     } catch (error) {

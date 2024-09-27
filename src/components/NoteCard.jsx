@@ -1,9 +1,14 @@
 import Trash from "../icons/Trash";
+import Spinner from "../icons/Spinner";
 import { useEffect, useRef, useState } from "react";
+import { db } from "../appwrite/databases";
 import { setNewOffset, setZIndex, autoGrow, bodyParser } from "../utils";
 
 // eslint-disable-next-line react/prop-types
 const NoteCard = ({ note }) => {
+  const [saving, setSaving] = useState(false);
+
+  const keyUpTimer = useRef(null);
   // eslint-disable-next-line react/prop-types
   const body = bodyParser(note.body);
   // eslint-disable-next-line react/prop-types
@@ -44,6 +49,35 @@ const NoteCard = ({ note }) => {
   const mouseUp = () => {
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
+
+    const newPosition = setNewOffset(cardRef.current);
+    saveData("position", newPosition);
+    // eslint-disable-next-line react/prop-types
+    db.notes.update(note.$id, { position: JSON.stringify(newPosition) });
+  };
+
+  const saveData = async (key, value) => {
+    const payload = { [key]: JSON.stringify(value) };
+
+    try {
+      // eslint-disable-next-line react/prop-types
+      await db.notes.update(note.$id, payload);
+    } catch (error) {
+      console.log(error);
+    }
+    setSaving(false);
+  };
+
+  const handleKeyUp = () => {
+    setSaving(true);
+
+    if (keyUpTimer.current) {
+      clearTimeout(keyUpTimer.current);
+    }
+
+    keyUpTimer.current = setTimeout(() => {
+      saveData("body", textAreaRef.current.value);
+    }, 2000);
   };
 
   return (
@@ -64,9 +98,16 @@ const NoteCard = ({ note }) => {
         }}
       >
         <Trash />
+        {saving && (
+          <div className="card-saving">
+            <Spinner color={colors.colorText} />
+            <span style={{ color: colors.colorText }}>Saving...</span>
+          </div>
+        )}
       </div>
       <div className="card-body">
         <textarea
+          onKeyUp={handleKeyUp}
           ref={textAreaRef}
           style={{ colors: colors.colorText }}
           defaultValue={body}
